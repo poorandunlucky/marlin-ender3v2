@@ -1,5 +1,57 @@
 # Ender 3 V2
 
+## New Firmware Found
+
+If you look under https://github.com/Jyers/Marlin you'll find a project from Jyers to get all the Marlin functions working on the stock Ender 3 V2 display (the problem is really that the DWIN display is closed-source, but Jyers was able to hack it, and is currently working to get his project upstream of the main Marlin project.
+
+It exists as source, and pre-built binary images, and you'll find the configuration files for those binary releases in the repo; there's releases for UBL, BLTouch, manual, high-speed, various probing densities, etc.  It's a very well-maintained project.
+
+### Instructions for the Jyers firmware
+
+So you just flash whatever release you want, and you configure it from the control panel.  You'll find new configuration options like PID autotune for your hotend, and bed, a mesh viewer, and a slew of other Marlin functions that would not work on the DWIN display drivers Marlin has by default.
+
+If you read his wiki carefully, you'll find the necessary instructions.
+
+And these are my Cura settings for the Ender 3 V2 for UBL, but they should also work with non-UBL probing as well.
+
+````gcode
+; Ender 3 Custom Start G-code
+G92 E0 ; Reset Extruder
+G28 ; Home all axes - G29 disables bed levelling, so the following needs to be after G28.
+
+; Jyers Marlin FW Addition to Enable Levelling
+G29 A ; Activate UBL.
+G29 L0 ; Load default mesh from EEPROM.
+G29 F10 ; Fade corrections over 10 mm (uncompensated (true to printer) above that).
+G29 J2 ; Get the bed tilt in a 2 x 2 grid instead of the default 3-points.
+M420 S1 Z10 ; Enable leveling/UBL, fade corrections over 10 mm (this is for Non-UBL builds, for compatibility.
+; Back to default Cura machine script for the Ender 3 Pro after this
+
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 X0.1 Y20 Z0.3 F5000.0 ; Move to start position
+G1 X0.1 Y200.0 Z0.3 F1500.0 E15 ; Draw the first line
+G1 X0.4 Y200.0 Z0.3 F5000.0 ; Move to side a little
+G1 X0.4 Y20 Z0.3 F1500.0 E30 ; Draw the second line
+G92 E0 ; Reset Extruder
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 X5 Y20 Z0.3 F5000.0 ; Move over to prevent blob squish
+````
+
+
+# This repository is now unmaintained
+
+As I've explained above, I've moved to the Jyers firmware that works **wonders**, it **should** be the firmware that Cura makes for the Ender 3 V2, but it's not.  If you have money, please help him out, he *really* deserves it!
+
+## Possible Future
+
+Since Jyers includes the configuration files for his various builds, it's possible that I tweak some at some point, and if that happens, I'll arrange this repository to serve the purpose of sharing the config files I've modified for the Jyers firmware.
+
+> -
+>## --- BELOW IS THE ORIGINAL README WHICH IS REALLY NO LONGER RELEVANT ---
+> -
+
+# Ender 3 V2
+
 ## Version Notes, and Known Bugs
 
 ### 0.1
